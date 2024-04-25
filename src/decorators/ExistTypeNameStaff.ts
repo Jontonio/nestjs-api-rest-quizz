@@ -1,25 +1,27 @@
 import { Injectable } from "@nestjs/common";
+import { InjectRepository } from "@nestjs/typeorm";
 import {
   ValidationOptions,
   ValidatorConstraint,
   ValidatorConstraintInterface,
   registerDecorator,
 } from "class-validator";
-import { EntityManager } from "typeorm";
+import { TypeStaff } from "src/type-staff/entities/type-staff.entity";
+import { Repository } from "typeorm";
 
 // Clase del decorador
 @ValidatorConstraint({ name: "TypeNameStaffValidator", async: true })
 @Injectable()
 export class TypeNameStaffValidator implements ValidatorConstraintInterface {
-
-  constructor(private readonly entityManager: EntityManager) {}
+  constructor(
+    @InjectRepository(TypeStaff) public typeStaffModel: Repository<TypeStaff>,
+  ) {}
 
   async validate(value: string): Promise<boolean> {
     try {
-      const existNameType = await this.entityManager.getRepository('type_staff')
-                .createQueryBuilder('type_staff')
-                .where({['name_type_staff']: value})
-                .getExists()
+      const existNameType = await this.typeStaffModel.findOneBy({
+        name_type_staff: value,
+      });
       return !existNameType;
     } catch (e) {
       return false;

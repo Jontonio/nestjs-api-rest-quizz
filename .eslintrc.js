@@ -27,7 +27,13 @@ module.exports = {
       files: ["**/*.ts"], // specify the files you want to override
       excludedFiles: "path/to/nested/**", // specify the nested path you want to exclude
       rules: {
-        "eslintprettier/prettier": "off", // disable eslint-plugin-prettier
+        "eslintprettier/prettier": "off", // disable eslint-plugin-prettier,
+        "prettier/prettier": [
+          "error",
+          {
+            "endOfLine": "auto"
+          }
+        ]
       },
     },
   ]

@@ -4,6 +4,7 @@ import { UpdateTypeStaffDto } from "./dto/update-type-staff.dto";
 import { InjectRepository } from "@nestjs/typeorm";
 import { TypeStaff } from "./entities/type-staff.entity";
 import { Repository } from "typeorm";
+import { HttpResponse } from "src/class/HttpResponse";
 
 @Injectable()
 export class TypeStaffService {
@@ -13,13 +14,12 @@ export class TypeStaffService {
   async create(createTypeStaffDto: CreateTypeStaffDto) {
     try {
       const typeStaff = await this.typeStaffModel.save(createTypeStaffDto);
-      return {
-        msg: "Personal creado correctamente",
-        status: 201,
-        data: typeStaff,
-      };
+      return new HttpResponse().res_success(
+        201,
+        "Nombre de tipo de personal creado correctamente",
+        typeStaff,
+      );
     } catch (error) {
-      console.log(error);
       throw new InternalServerErrorException(
         "Ocurrio un error al crear el personal",
       );
@@ -29,11 +29,11 @@ export class TypeStaffService {
   async findAll() {
     try {
       const typeStaffs = await this.typeStaffModel.find();
-      return {
-        msg: "Lista de tipos de personal",
-        status: 200,
-        data: typeStaffs,
-      };
+      return new HttpResponse().res_success(
+        201,
+        "Lista de tipos de personal",
+        typeStaffs,
+      );
     } catch (error) {
       throw new InternalServerErrorException(
         "Ocurrio un error al obtener los tipos de personal",
@@ -46,11 +46,7 @@ export class TypeStaffService {
       const typeStaff = await this.typeStaffModel.findBy({
         id_type_staff: id,
       });
-      return {
-        msg: "Personal con id " + id,
-        status: 200,
-        data: typeStaff,
-      };
+      return new HttpResponse().res_success(201, "Tipo personal", typeStaff);
     } catch (error) {
       throw new InternalServerErrorException(
         "Ocurrio un error al obtener el personal",
@@ -61,11 +57,11 @@ export class TypeStaffService {
   async update(id_type_staff: number, data: UpdateTypeStaffDto) {
     try {
       const typeStaff = await this.typeStaffModel.update(id_type_staff, data);
-      return {
-        msg: "Personal actualizado correctamente",
-        status: 200,
-        data: typeStaff,
-      };
+      return new HttpResponse().res_success(
+        201,
+        "Tipo de personal actualizado correctamente",
+        typeStaff,
+      );
     } catch (error) {
       throw new InternalServerErrorException(
         "Ocurrio un error al actualizar el personal",
@@ -73,7 +69,20 @@ export class TypeStaffService {
     }
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} typeStaff`;
+  async remove(id_type_staff: number) {
+    try {
+      const typeStaff = await this.typeStaffModel.update(id_type_staff, {
+        status: 0,
+      });
+      return new HttpResponse().res_success(
+        201,
+        "Tipo de personal eliminado correctamente",
+        typeStaff,
+      );
+    } catch (error) {
+      throw new InternalServerErrorException(
+        "Ocurrio un error al actualizar el personal",
+      );
+    }
   }
 }
