@@ -4,9 +4,16 @@ import { AppService } from "./app.service";
 import { TypeStaffModule } from "./type-staff/type-staff.module";
 import { DbModule } from "./db/db.module";
 import { ConfigModule } from "./config/config.module";
+import { UserModule } from "./user/user.module";
+import { RoleModule } from './role/role.module';
+import { PermissionModule } from './permission/permission.module';
+import { RolePermissionModule } from './role_permission/role_permission.module';
+import { FileModule } from './file/file.module';
+import { InstitutionStaffModule } from './institution_staff/institution_staff.module';
+import { InstitutionModule } from './institution/institution.module';
 
 @Module({
-  imports: [ConfigModule, DbModule, TypeStaffModule],
+  imports: [ConfigModule, DbModule, TypeStaffModule, UserModule, RoleModule, PermissionModule, RolePermissionModule, FileModule, InstitutionStaffModule, InstitutionModule],
   controllers: [AppController],
   providers: [AppService],
 })
