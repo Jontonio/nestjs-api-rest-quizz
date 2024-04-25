@@ -1,15 +1,17 @@
-import { 
-    Column,
-    CreateDateColumn,
-    PrimaryGeneratedColumn,
-    Entity,
-    Index,
-    UpdateDateColumn,
- } from "typeorm";
+import { Institution } from "src/institution/entities/institution.entity";
+import {
+  Column,
+  CreateDateColumn,
+  PrimaryGeneratedColumn,
+  Entity,
+  Index,
+  UpdateDateColumn,
+  OneToMany,
+} from "typeorm";
 
- @Entity()
+@Entity()
 export class CategoryInstitution {
-    @PrimaryGeneratedColumn("increment")
+  @PrimaryGeneratedColumn("increment")
   id_category_institution: number;
 
   @Column({ type: "varchar", length: 50 })
@@ -25,5 +27,7 @@ export class CategoryInstitution {
   @UpdateDateColumn()
   updatedAt: Date;
 
-
+  // Relacionar la tabla institution
+  @OneToMany(() => Institution, (ie: Institution) => ie.category_institution)
+  institutions: Institution[];
 }

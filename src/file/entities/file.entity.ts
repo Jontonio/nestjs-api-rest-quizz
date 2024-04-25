@@ -1,7 +1,13 @@
+import { Institution } from "src/institution/entities/institution.entity";
+import { Report } from "src/report/entities/report.entity";
 import {
   Column,
   CreateDateColumn,
   Entity,
+  JoinColumn,
+  ManyToMany,
+  ManyToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from "typeorm";
@@ -28,4 +34,10 @@ export class File {
 
   @UpdateDateColumn()
   updatedAt: Date;
+
+  // Relación report
+  // @OneToMany(() => Report, (r: Report) => r.file)
+  // reports: Report[];
+
+  // Relacion con Institution
 }

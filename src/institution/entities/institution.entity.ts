@@ -1,7 +1,10 @@
+import { CategoryInstitution } from "src/category_institution/entities/category_institution.entity";
 import {
   Column,
   CreateDateColumn,
   Entity,
+  JoinColumn,
+  ManyToOne,
   PrimaryColumn,
   UpdateDateColumn,
 } from "typeorm";
@@ -31,4 +34,12 @@ export class Institution {
 
   @UpdateDateColumn()
   updatedAt: Date;
+
+  // Relacionar con la tabla categoria
+  @ManyToOne(
+    () => CategoryInstitution,
+    (ci: CategoryInstitution) => ci.institutions,
+  )
+  @JoinColumn({ name: "category_institution_id" })
+  category_institution: CategoryInstitution;
 }
