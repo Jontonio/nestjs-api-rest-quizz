@@ -15,10 +15,11 @@ import { RolePermissionModule } from './role_permission/role_permission.module';
 import { FileModule } from './file/file.module';
 import { InstitutionStaffModule } from './institution_staff/institution_staff.module';
 import { InstitutionModule } from './institution/institution.module';
+import { ExcelService } from './excel/excel.service';
 
 @Module({
   imports: [ConfigModule, DbModule, TypeStaffModule, UserModule, RoleModule, PermissionModule, RolePermissionModule, FileModule, InstitutionStaffModule, InstitutionModule, StaffModule, CategoryInstitutionModule, ResultModule, ReportModule],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService, ExcelService],
 })
 export class AppModule {}
