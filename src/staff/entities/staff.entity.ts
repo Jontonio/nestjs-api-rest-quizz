@@ -1,9 +1,11 @@
+import { InstitutionStaff } from "src/institution_staff/entities/institution_staff.entity";
 import { 
     Column,
     CreateDateColumn,
     Entity,
     PrimaryColumn,
     UpdateDateColumn,
+    OneToMany,
  } from "typeorm";
 
 @Entity()
@@ -28,6 +30,10 @@ export class Staff {
   
     @UpdateDateColumn()
     updatedAt: Date;
+
+    // Relacionar la tabla institution_staff
+  @OneToMany(() => InstitutionStaff, (is: InstitutionStaff) => is.staff)
+  institutionstaffs: InstitutionStaff[];
 }
 
 

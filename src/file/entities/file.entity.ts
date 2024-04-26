@@ -36,8 +36,15 @@ export class File {
   updatedAt: Date;
 
   // Relación report
-  // @OneToMany(() => Report, (r: Report) => r.file)
-  // reports: Report[];
+  @OneToMany(() => Report, (r: Report) => r.file)
+  reports: Report[];
 
   // Relacion con Institution
+  @ManyToOne(
+    () => Institution,
+    (ci: Institution) => ci.files,
+  )
+  @JoinColumn({ name: "institution_id" })
+  institution: Institution;
+
 }

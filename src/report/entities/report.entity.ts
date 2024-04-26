@@ -1,4 +1,5 @@
 import { Result } from "src/result/entities/result.entity";
+import { File } from "src/file/entities/file.entity";
 import {
   Column,
   CreateDateColumn,
@@ -6,6 +7,8 @@ import {
   Entity,
   UpdateDateColumn,
   OneToMany,
+  JoinColumn,
+  ManyToOne,
 } from "typeorm";
 
 @Entity()
@@ -31,6 +34,13 @@ export class Report {
   // Relacionar la tabla reporte
   @OneToMany(() => Result, (r: Result) => r.report)
   results: Result[];
+ 
 
   // Relacion con file
+ @ManyToOne(
+ () => File,
+ (f: File) => f.reports,
+ )
+  @JoinColumn({ name: "file_id" })
+ file: File;
 }
