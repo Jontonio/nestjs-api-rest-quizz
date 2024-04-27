@@ -1,3 +1,4 @@
+import { Role } from "src/role/entities/role.entity";
 import {
   Column,
   CreateDateColumn,
@@ -5,6 +6,8 @@ import {
   Index,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
+  ManyToOne,
+  JoinColumn,
 } from "typeorm";
 
 @Entity()
@@ -33,4 +36,12 @@ export class User {
 
   @UpdateDateColumn()
   updatedAt: Date;
+
+   // Relacionar con Rol
+   @ManyToOne(
+    () => Role,
+    (r: Role) => r.users,
+  )
+  @JoinColumn({ name: "role_id" })
+  role: Role;
 }

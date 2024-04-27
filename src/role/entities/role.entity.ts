@@ -1,3 +1,5 @@
+import { RolePermission } from "src/role_permission/entities/role_permission.entity";
+import { User } from "src/user/entities/user.entity";
 import {
   Column,
   CreateDateColumn,
@@ -5,6 +7,7 @@ import {
   Index,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
+  OneToMany,
 } from "typeorm";
 
 @Entity()
@@ -24,4 +27,13 @@ export class Role {
 
   @UpdateDateColumn()
   updatedAt: Date;
+
+  // Relacionar la tabla user
+  @OneToMany(() => User, (u: User) => u.role)
+  users: User[];
+
+  // Relacionar la tabla role_permissions
+  @OneToMany(() => RolePermission, (r: RolePermission) => r.role)
+  role_permissions: RolePermission[];
+
 }
