@@ -1,22 +1,22 @@
-import { InstitutionStaff } from "src/institution_staff/entities/institution_staff.entity";
+import { Institution } from "src/institution/entities/institution.entity";
 import {
   Column,
   CreateDateColumn,
+  PrimaryGeneratedColumn,
   Entity,
   Index,
-  PrimaryGeneratedColumn,
   UpdateDateColumn,
   OneToMany,
 } from "typeorm";
 
 @Entity()
-export class TypeStaff {
+export class CategoryInstitution {
   @PrimaryGeneratedColumn("increment")
-  id_type_staff: number;
+  id_category_institution: number;
 
   @Column({ type: "varchar", length: 50 })
   @Index({ unique: true })
-  name_type_staff: string;
+  name_category_institution: string;
 
   @Column({ default: true })
   status: number;
@@ -27,7 +27,7 @@ export class TypeStaff {
   @UpdateDateColumn()
   updatedAt: Date;
 
-  // Relacionar la tabla institution_staff
-  @OneToMany(() => InstitutionStaff, (is: InstitutionStaff) => is.type_staff)
-  institutionstaffs: InstitutionStaff[];
+  // Relacionar la tabla institution
+  @OneToMany(() => Institution, (ie: Institution) => ie.category_institution)
+  institutions: Institution[];
 }
