@@ -32,13 +32,8 @@
     "openai": "^4.38.5",
     "reflect-metadata": "^0.1.13",
     "rxjs": "^7.2.0",
-<<<<<<< HEAD
     "typeorm": "^0.3.20",
     "xlsx": "^0.18.4"
-=======
-    "superagent": "^9.0.1",
-    "typeorm": "^0.3.20"
->>>>>>> main
   },
   "devDependencies": {
     "@nestjs/cli": "^9.0.0",

@@ -1,11 +1,11 @@
-import { Injectable } from '@nestjs/common';
-import { CreateStaffDto } from './dto/create-staff.dto';
-import { UpdateStaffDto } from './dto/update-staff.dto';
+import { Injectable } from "@nestjs/common";
+import { CreateStaffDto } from "./dto/create-staff.dto";
+import { UpdateStaffDto } from "./dto/update-staff.dto";
 
 @Injectable()
 export class StaffService {
   create(createStaffDto: CreateStaffDto) {
-    return 'This action adds a new staff';
+    return "This action adds a new staff";
   }
 
   findAll() {

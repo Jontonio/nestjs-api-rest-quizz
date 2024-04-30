@@ -19,7 +19,7 @@ export class TypeStaff {
   name_type_staff: string;
 
   @Column({ default: true })
-  status: number;
+  status: boolean;
 
   @CreateDateColumn()
   createdAt: Date;

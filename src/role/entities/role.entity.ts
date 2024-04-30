@@ -35,5 +35,4 @@ export class Role {
   // Relacionar la tabla role_permissions
   @OneToMany(() => RolePermission, (r: RolePermission) => r.role)
   role_permissions: RolePermission[];
-
 }
