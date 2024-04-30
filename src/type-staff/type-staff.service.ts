@@ -18,7 +18,7 @@ export class TypeStaffService {
   async create(createTypeStaffDto: CreateTypeStaffDto) {
     try {
       const typeStaff = await this.typeStaffModel.save(createTypeStaffDto);
-      return new HttpResponse().res_success(
+      return new HttpResponse().success(
         201,
         "Nombre de tipo de personal creado correctamente",
         typeStaff,
@@ -50,7 +50,7 @@ export class TypeStaffService {
       // Instanciar page dto con la data y page meta
       const data = new PageDto(typeStaffs, pageMetaDto);
       // Retornar la respuesta
-      return new HttpResponse().res_success(
+      return new HttpResponse().success(
         201,
         "Lista de tipos de personal",
         data,
@@ -68,7 +68,7 @@ export class TypeStaffService {
         id_type_staff: id,
       });
 
-      return new HttpResponse().res_success(201, "Tipo personal", typeStaff);
+      return new HttpResponse().success(201, "Tipo personal", typeStaff);
     } catch (error) {
       throw new InternalServerErrorException(
         "Ocurrio un error al obtener el personal",
@@ -80,7 +80,7 @@ export class TypeStaffService {
     try {
       const typeStaff = await this.typeStaffModel.update(id_type_staff, data);
 
-      return new HttpResponse().res_success(
+      return new HttpResponse().success(
         201,
         "Tipo de personal actualizado correctamente",
         typeStaff,
@@ -98,7 +98,7 @@ export class TypeStaffService {
         status: false,
       });
 
-      return new HttpResponse().res_success(
+      return new HttpResponse().success(
         201,
         "Tipo de personal eliminado correctamente",
         typeStaff,

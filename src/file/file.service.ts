@@ -42,7 +42,7 @@ export class FileService {
           );
           const interpretedData = fileExcel.groupBy(columns);
           interpretedData.description = content;
-          return new HttpResponse().res_success(
+          return new HttpResponse().success(
             200,
             "Resultados de agrupación de datos e interpretacion con IA",
             interpretedData,
@@ -52,7 +52,7 @@ export class FileService {
         }
       }
 
-      return new HttpResponse().res_success(
+      return new HttpResponse().success(
         200,
         "Resultados de agrupación de datos",
         fileExcel.groupBy(columns),
@@ -70,7 +70,7 @@ export class FileService {
 
       fileExcel.readExcel(ruta);
 
-      return new HttpResponse().res_success(
+      return new HttpResponse().success(
         200,
         "Archivo cargado correctamente",
         fileExcel.getAllDataFile(),
