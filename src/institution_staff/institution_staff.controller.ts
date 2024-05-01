@@ -6,10 +6,12 @@ import {
   Patch,
   Param,
   Delete,
+  Query,
 } from "@nestjs/common";
 import { InstitutionStaffService } from "./institution_staff.service";
 import { CreateInstitutionStaffDto } from "./dto/create-institution_staff.dto";
 import { UpdateInstitutionStaffDto } from "./dto/update-institution_staff.dto";
+import { PageOptionsDto } from "src/helpers/PageOptionsDto.dto";
 
 @Controller("institution-staff")
 export class InstitutionStaffController {
@@ -23,8 +25,8 @@ export class InstitutionStaffController {
   }
 
   @Get()
-  findAll() {
-    return this.institutionStaffService.findAll();
+  findAll(@Query() pageOptionsDto: PageOptionsDto) {
+    return this.institutionStaffService.findAll(pageOptionsDto);
   }
 
   @Get(":id")

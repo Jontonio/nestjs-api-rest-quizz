@@ -18,7 +18,7 @@ export class InstitutionStaff {
   id_institution_staff: number;
 
   @Column({ default: true })
-  status: number;
+  status: boolean;
 
   @CreateDateColumn()
   createdAt: Date;
@@ -29,25 +29,34 @@ export class InstitutionStaff {
    // Relacionar con la tabla Type_staff
    @ManyToOne(
     () => TypeStaff,
-    (ts: TypeStaff) => ts.institutionstaffs,
+    (ts: TypeStaff) => ts.institutionstaffs,{
+      nullable: false,
+      onUpdate: "CASCADE",
+    }
   )
-  @JoinColumn({ name: "type_staff_id" })
+  @JoinColumn({ name: "id_type_staff" , referencedColumnName: "id_type_staff" })
   type_staff: TypeStaff;
 
   // Relacionar con la tabla staff
   @ManyToOne(
     () => Staff,
-    (ts: Staff) => ts.institutionstaffs,
+    (ts: Staff) => ts.institutionstaffs,{
+      nullable: false,
+      onUpdate: "CASCADE",
+    }
   )
-  @JoinColumn({ name: "card_staff_id" })
+  @JoinColumn({ name: "id_card_staff" , referencedColumnName: "id_card_staff"})
   staff: Staff;
 
    // Relacionar con la institution
-   @ManyToOne(
+  @ManyToOne(
     () => Institution,
-    (ie: Institution) => ie.institution_staffs,
+    (ie: Institution) => ie.institution_staffs,{
+      nullable: false,
+      onUpdate: "CASCADE",
+    }
   )
-  @JoinColumn({ name: "institution_cod_mod" })
+  @JoinColumn({ name: "cod_mod_institution" , referencedColumnName: "cod_mod_institution"})
   institution: Institution;
 
 }
