@@ -9,10 +9,12 @@ import {
 import { TypeStaff } from "src/type-staff/entities/type-staff.entity";
 import { Repository } from "typeorm";
 
-// Clase del decorador
-@ValidatorConstraint({ name: "TypeNameStaffValidator", async: true })
+// Clase del decorador para evitar el duplicado de nombre de tipos de personal
+@ValidatorConstraint({ name: "UniqueTypeNameStaffValidator", async: true })
 @Injectable()
-export class TypeNameStaffValidator implements ValidatorConstraintInterface {
+export class UniqueTypeNameStaffValidator
+  implements ValidatorConstraintInterface
+{
   constructor(
     @InjectRepository(TypeStaff) public typeStaffModel: Repository<TypeStaff>,
   ) {}
@@ -34,13 +36,13 @@ export class TypeNameStaffValidator implements ValidatorConstraintInterface {
 }
 
 // Nombre del decorador
-export const ExistTypeNameStaff = (validationOptions?: ValidationOptions) => {
+export const UniqueTypeNameStaff = (validationOptions?: ValidationOptions) => {
   return (object: unknown, propertyName: string) => {
     registerDecorator({
       target: object.constructor,
       propertyName: propertyName,
       options: validationOptions,
-      validator: TypeNameStaffValidator,
+      validator: UniqueTypeNameStaffValidator,
     });
   };
 };

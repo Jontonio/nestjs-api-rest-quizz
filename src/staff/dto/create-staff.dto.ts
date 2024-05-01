@@ -5,10 +5,10 @@ import {
   MaxLength,
   MinLength,
 } from "class-validator";
-import { ExistIdCardStaff } from "src/decorators/IdCardStaff";
+import { UniqueIDCardStaff } from "src/decorators/Staff";
 
 export class CreateStaffDto {
-  @ExistIdCardStaff()
+  @UniqueIDCardStaff({ message: "El DNI personal a registrar debe ser único" })
   @MinLength(8, {
     message: "El DNI del personal debe tener como mínimo 8 dígitos",
   })

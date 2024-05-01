@@ -5,12 +5,12 @@ import { TypeOrmModule } from "@nestjs/typeorm";
 import { Staff } from "./entities/staff.entity";
 import { MiddlewareBuilder } from "@nestjs/core";
 import { ExistStaff } from "src/middlewares/exist-staff.middleware";
-import { IdCardStaffValidator } from "src/decorators/IdCardStaff";
+import { UniqueIDCardStaffValidator } from "src/decorators/Staff";
 
 @Module({
   imports: [TypeOrmModule.forFeature([Staff])],
   controllers: [StaffController],
-  providers: [StaffService, IdCardStaffValidator],
+  providers: [StaffService, UniqueIDCardStaffValidator],
 })
 export class StaffModule {
   configure(consumer: MiddlewareBuilder) {

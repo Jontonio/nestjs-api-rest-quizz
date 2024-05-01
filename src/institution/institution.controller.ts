@@ -6,10 +6,12 @@ import {
   Patch,
   Param,
   Delete,
+  Query,
 } from "@nestjs/common";
 import { InstitutionService } from "./institution.service";
 import { CreateInstitutionDto } from "./dto/create-institution.dto";
 import { UpdateInstitutionDto } from "./dto/update-institution.dto";
+import { PageOptionsDto } from "src/helpers/PageOptionsDto.dto";
 
 @Controller("institution")
 export class InstitutionController {
@@ -21,13 +23,13 @@ export class InstitutionController {
   }
 
   @Get()
-  findAll() {
-    return this.institutionService.findAll();
+  findAll(@Query() pageOptionsDto: PageOptionsDto) {
+    return this.institutionService.findAll(pageOptionsDto);
   }
 
   @Get(":id")
   findOne(@Param("id") id: string) {
-    return this.institutionService.findOne(+id);
+    return this.institutionService.findOne(id);
   }
 
   @Patch(":id")
@@ -35,11 +37,11 @@ export class InstitutionController {
     @Param("id") id: string,
     @Body() updateInstitutionDto: UpdateInstitutionDto,
   ) {
-    return this.institutionService.update(+id, updateInstitutionDto);
+    return this.institutionService.update(id, updateInstitutionDto);
   }
 
   @Delete(":id")
   remove(@Param("id") id: string) {
-    return this.institutionService.remove(+id);
+    return this.institutionService.remove(id);
   }
 }

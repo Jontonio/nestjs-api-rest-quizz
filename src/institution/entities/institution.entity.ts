@@ -30,7 +30,7 @@ export class Institution {
   managment_dependency_institution: string;
 
   @Column({ default: true })
-  status: number;
+  status: boolean;
 
   @CreateDateColumn()
   createdAt: Date;
@@ -42,8 +42,15 @@ export class Institution {
   @ManyToOne(
     () => CategoryInstitution,
     (ci: CategoryInstitution) => ci.institutions,
+    {
+      nullable: false,
+      onUpdate: "CASCADE",
+    },
   )
-  @JoinColumn({ name: "category_institution_id" })
+  @JoinColumn({
+    name: "id_category_institution",
+    referencedColumnName: "id_category_institution",
+  })
   category_institution: CategoryInstitution;
 
   // Relacionar la tabla institution

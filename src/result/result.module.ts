@@ -5,13 +5,13 @@ import { TypeOrmModule } from "@nestjs/typeorm";
 import { Result } from "./entities/result.entity";
 import { MiddlewareBuilder } from "@nestjs/core";
 import { ExistResult } from "src/middlewares/exist-result.middleware";
-import { IdReportValidator } from "src/decorators/IdReport";
+import { ExistIdReportValidator } from "src/decorators/Report";
 import { Report } from "src/report/entities/report.entity";
 
 @Module({
   imports: [TypeOrmModule.forFeature([Result, Report])],
   controllers: [ResultController],
-  providers: [ResultService, IdReportValidator],
+  providers: [ResultService, ExistIdReportValidator],
 })
 export class ResultModule {
   configure(consumer: MiddlewareBuilder) {

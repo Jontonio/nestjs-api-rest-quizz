@@ -10,9 +10,9 @@ import { Report } from "src/report/entities/report.entity";
 import { Repository } from "typeorm";
 
 // Clase del decorador
-@ValidatorConstraint({ name: "IdReportValidator", async: true })
+@ValidatorConstraint({ name: "ExistIdReportValidator", async: true })
 @Injectable()
-export class IdReportValidator implements ValidatorConstraintInterface {
+export class ExistIdReportValidator implements ValidatorConstraintInterface {
   constructor(
     @InjectRepository(Report) public reportModel: Repository<Report>,
   ) {}
@@ -42,7 +42,7 @@ export const ExistIdReport = (validationOptions?: ValidationOptions) => {
       target: object.constructor,
       propertyName: propertyName,
       options: validationOptions,
-      validator: IdReportValidator,
+      validator: ExistIdReportValidator,
     });
   };
 };
