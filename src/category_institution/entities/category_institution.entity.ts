@@ -19,7 +19,7 @@ export class CategoryInstitution {
   name_category_institution: string;
 
   @Column({ default: true })
-  status: number;
+  status: boolean;
 
   @CreateDateColumn()
   createdAt: Date;
