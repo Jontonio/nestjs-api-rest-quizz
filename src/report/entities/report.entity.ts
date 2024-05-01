@@ -34,13 +34,9 @@ export class Report {
   // Relacionar la tabla reporte
   @OneToMany(() => Result, (r: Result) => r.report)
   results: Result[];
- 
 
   // Relacion con file
- @ManyToOne(
- () => File,
- (f: File) => f.reports,
- )
+  @ManyToOne(() => File, (f: File) => f.reports)
   @JoinColumn({ name: "file_id" })
- file: File;
+  file: File;
 }

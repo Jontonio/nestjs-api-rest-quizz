@@ -21,7 +21,7 @@ export class Result {
   result_value: number;
 
   @Column({ default: true })
-  status: number;
+  status: boolean;
 
   @CreateDateColumn()
   createdAt: Date;
@@ -30,7 +30,9 @@ export class Result {
   updatedAt: Date;
 
   // Relacion con resultado
-  @ManyToOne(() => Report, (r: Report) => r.results)
-  @JoinColumn({ name: "report_id" })
+  @ManyToOne(() => Report, (r: Report) => r.results, {
+    nullable: false,
+  })
+  @JoinColumn({ name: "id_report", referencedColumnName: "id_report" })
   report: Report;
 }
