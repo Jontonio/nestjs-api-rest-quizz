@@ -6,10 +6,12 @@ import {
   Patch,
   Param,
   Delete,
+  Query,
 } from "@nestjs/common";
 import { ResultService } from "./result.service";
 import { CreateResultDto } from "./dto/create-result.dto";
 import { UpdateResultDto } from "./dto/update-result.dto";
+import { PageOptionsDto } from "src/helpers/PageOptionsDto.dto";
 
 @Controller("result")
 export class ResultController {
@@ -21,8 +23,8 @@ export class ResultController {
   }
 
   @Get()
-  findAll() {
-    return this.resultService.findAll();
+  findAll(@Query() pageOptionsDto: PageOptionsDto) {
+    return this.resultService.findAll(pageOptionsDto);
   }
 
   @Get(":id")

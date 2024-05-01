@@ -1,5 +1,5 @@
 import { IsNotEmpty, IsString, MaxLength } from "class-validator";
-import { ExistTypeNameStaff } from "src/decorators/ExistTypeNameStaff";
+import { ExistTypeNameStaff } from "src/decorators/TypeNameStaff";
 
 export class CreateTypeStaffDto {
   @MaxLength(50, {

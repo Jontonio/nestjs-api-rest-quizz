@@ -6,25 +6,25 @@ import {
 } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Request, Response } from "express";
-import { TypeStaff } from "src/type-staff/entities/type-staff.entity";
+import { Result } from "src/result/entities/result.entity";
 import { Repository } from "typeorm";
 
 @Injectable()
-export class ExistTypeStaff implements NestMiddleware {
+export class ExistResult implements NestMiddleware {
   constructor(
-    @InjectRepository(TypeStaff) public typeStaffModel: Repository<TypeStaff>,
+    @InjectRepository(Result) public resultModel: Repository<Result>,
   ) {}
 
   async use(req: Request, res: Response, next: () => void) {
     try {
       const { id } = req.params;
-      const typeStaff = await this.typeStaffModel.findOneBy({
-        id_type_staff: Number(id),
+      const result = await this.resultModel.findOneBy({
+        id_result: Number(id),
       });
 
-      if (!typeStaff) {
+      if (!result) {
         throw new NotFoundException(
-          `El tipo de personal con id ${id} no se encuentra registrado`,
+          `El resultado con id ${id} no se encuentra registrado`,
         );
       }
       next();

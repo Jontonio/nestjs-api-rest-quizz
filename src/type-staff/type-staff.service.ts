@@ -25,7 +25,7 @@ export class TypeStaffService {
       );
     } catch (error) {
       throw new InternalServerErrorException(
-        "Ocurrio un error al crear el personal",
+        "Ocurrio un error al crear el tipo de personal",
       );
     }
   }
@@ -42,8 +42,8 @@ export class TypeStaffService {
         order: { id_type_staff: order },
       });
       // Contar la cantidad de registros
-      const itemCount = await this.typeStaffModel.countBy({
-        status: true,
+      const itemCount = await this.typeStaffModel.count({
+        where: { status: true },
       });
       // Instanciar el objeto para page meta
       const pageMetaDto = new PageMetaDto({ itemCount, pageOptionsDto });
@@ -62,13 +62,14 @@ export class TypeStaffService {
     }
   }
 
-  async findOne(id: number) {
+  async findOne(id_type_staff: number) {
     try {
-      const typeStaff = await this.typeStaffModel.findBy({
-        id_type_staff: id,
-      });
-
-      return new HttpResponse().success(201, "Tipo personal", typeStaff);
+      const typeStaff = await this.typeStaffModel.findOneBy({ id_type_staff });
+      return new HttpResponse().success(
+        200,
+        "Obtención de un personal",
+        typeStaff,
+      );
     } catch (error) {
       throw new InternalServerErrorException(
         "Ocurrio un error al obtener el personal",
@@ -105,7 +106,7 @@ export class TypeStaffService {
       );
     } catch (error) {
       throw new InternalServerErrorException(
-        "Ocurrio un error al actualizar el personal",
+        "Ocurrio un error al eliminar el tipo personal",
       );
     }
   }

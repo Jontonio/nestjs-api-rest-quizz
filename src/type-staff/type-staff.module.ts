@@ -4,8 +4,8 @@ import { TypeStaffController } from "./type-staff.controller";
 import { TypeOrmModule } from "@nestjs/typeorm";
 import { TypeStaff } from "./entities/type-staff.entity";
 import { MiddlewareBuilder } from "@nestjs/core";
-import { ExistTypeStaffMiddleware } from "src/middlewares/exist-type-staff.middleware";
-import { TypeNameStaffValidator } from "src/decorators/ExistTypeNameStaff";
+import { ExistTypeStaff } from "src/middlewares/exist-type-staff.middleware";
+import { TypeNameStaffValidator } from "src/decorators/TypeNameStaff";
 
 @Module({
   imports: [TypeOrmModule.forFeature([TypeStaff])],
@@ -14,9 +14,12 @@ import { TypeNameStaffValidator } from "src/decorators/ExistTypeNameStaff";
 })
 export class TypeStaffModule {
   configure(consumer: MiddlewareBuilder) {
-    // consumer.apply(ExistTypeStaffMiddleware).forRoutes(TypeStaffController);
     consumer
-      .apply(ExistTypeStaffMiddleware)
-      .forRoutes({ path: "type-staff/:id", method: RequestMethod.PATCH });
+      .apply(ExistTypeStaff)
+      .forRoutes(
+        { path: "type-staff/:id", method: RequestMethod.PATCH },
+        { path: "type-staff/:id", method: RequestMethod.GET },
+        { path: "type-staff/:id", method: RequestMethod.DELETE },
+      );
   }
 }

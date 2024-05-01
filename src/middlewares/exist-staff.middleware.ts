@@ -6,25 +6,23 @@ import {
 } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Request, Response } from "express";
-import { TypeStaff } from "src/type-staff/entities/type-staff.entity";
+import { Staff } from "src/staff/entities/staff.entity";
 import { Repository } from "typeorm";
 
 @Injectable()
-export class ExistTypeStaff implements NestMiddleware {
-  constructor(
-    @InjectRepository(TypeStaff) public typeStaffModel: Repository<TypeStaff>,
-  ) {}
+export class ExistStaff implements NestMiddleware {
+  constructor(@InjectRepository(Staff) public staffModel: Repository<Staff>) {}
 
   async use(req: Request, res: Response, next: () => void) {
     try {
       const { id } = req.params;
-      const typeStaff = await this.typeStaffModel.findOneBy({
-        id_type_staff: Number(id),
+      const staff = await this.staffModel.findOneBy({
+        id_card_staff: id,
       });
 
-      if (!typeStaff) {
+      if (!staff) {
         throw new NotFoundException(
-          `El tipo de personal con id ${id} no se encuentra registrado`,
+          `El personal con DNI ${id} no se encuentra registrado`,
         );
       }
       next();
