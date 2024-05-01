@@ -12,6 +12,7 @@ import { FileService } from "./file.service";
 import { CreateFileDto } from "./dto/create-file.dto";
 import { UpdateFileDto } from "./dto/update-file.dto";
 import { QueryFileDto } from "./dto/query-file.dto";
+import { PageOptionsDto } from "src/helpers/PageOptionsDto.dto";
 
 @Controller("file")
 export class FileController {
@@ -23,8 +24,8 @@ export class FileController {
   }
 
   @Get()
-  findAll() {
-    return this.fileService.findAll();
+  findAll(@Query() pageOptionsDto: PageOptionsDto) {
+    return this.fileService.findAll(pageOptionsDto);
   }
 
   @Get("/generate-statistics-information")

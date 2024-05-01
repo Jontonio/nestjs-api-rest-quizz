@@ -5,17 +5,60 @@ import { ExcelFile } from "src/class/ExcelFile";
 import { OpenIaService } from "src/open-ia/open-ia.service";
 import { HttpResponse } from "src/class/HttpResponse";
 import { QueryFileDto } from "./dto/query-file.dto";
+import { InjectRepository } from "@nestjs/typeorm";
+import { File } from "./entities/file.entity";
+import { Repository } from "typeorm";
+import { PageOptionsDto } from "src/helpers/PageOptionsDto.dto";
+import { PageMetaDto } from "src/helpers/PageMetaDto";
+import { PageDto } from "src/helpers/page.dto";
 
 @Injectable()
 export class FileService {
-  constructor(private readonly openaiService: OpenIaService) {}
+  constructor(
+    @InjectRepository(File)
+    public fileModel: Repository<File>,
+    private readonly openaiService: OpenIaService,
+  ) {}
 
-  create(createFileDto: CreateFileDto) {
-    return "This action adds a new file";
+  async create(createFileDto: CreateFileDto) {
+    try {
+      const file = await this.fileModel.save(createFileDto);
+      return new HttpResponse().success(
+        201,
+        "Archivo registrado correctamente",
+        file,
+      );
+    } catch (error) {
+      throw new InternalServerErrorException(
+        "Ocurrio un error al registrar archivo",
+      );
+    }
   }
 
-  findAll() {
-    return `This action returns all file`;
+  async findAll(pageOptionsDto: PageOptionsDto) {
+    try {
+      const { skip, order, take } = pageOptionsDto;
+      const files = await this.fileModel.find({
+        where: { status: true },
+        skip: skip,
+        take: take,
+        order: { createdAt: order },
+      });
+
+      const itemCount = await this.fileModel.count({
+        where: { status: true },
+      });
+
+      const pageMetaDto = new PageMetaDto({ itemCount, pageOptionsDto });
+
+      const data = new PageDto(files, pageMetaDto);
+
+      return new HttpResponse().success(201, "Lista de archivos", data);
+    } catch (error) {
+      throw new InternalServerErrorException(
+        "Ocurrio un error al obtener lista de archivos",
+      );
+    }
   }
 
   async generateStatisticsInformation(
@@ -80,15 +123,50 @@ export class FileService {
     }
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} file`;
+  async findOne(id_file: number) {
+    try {
+      const file = await this.fileModel.findOne({
+        where: { id_file, status: true },
+      });
+      return new HttpResponse().success(200, "Obtención del archivo", file);
+    } catch (error) {
+      throw new InternalServerErrorException(
+        "Ocurrio un error al obtener archivo",
+      );
+    }
   }
 
-  update(id: number, updateFileDto: UpdateFileDto) {
-    return `This action updates a #${id} file`;
+  async update(id_file: number, updateFileDto: UpdateFileDto) {
+    try {
+      const file = await this.fileModel.update(id_file, updateFileDto);
+
+      return new HttpResponse().success(
+        200,
+        "Archivo actualizado correctamente",
+        file,
+      );
+    } catch (error) {
+      throw new InternalServerErrorException(
+        "Ocurrio un error al actualizar archivo",
+      );
+    }
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} file`;
+  async remove(id_file: number) {
+    try {
+      const institution = await this.fileModel.update(id_file, {
+        status: false,
+      });
+
+      return new HttpResponse().success(
+        201,
+        "Archivo eliminado correctamente",
+        institution,
+      );
+    } catch (error) {
+      throw new InternalServerErrorException(
+        "Ocurrio un error al eliminar archivo",
+      );
+    }
   }
 }

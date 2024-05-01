@@ -27,7 +27,7 @@ export class File {
   file_name: string;
 
   @Column({ default: true })
-  status: number;
+  status: boolean;
 
   @CreateDateColumn()
   createdAt: Date;
@@ -40,11 +40,7 @@ export class File {
   reports: Report[];
 
   // Relacion con Institution
-  @ManyToOne(
-    () => Institution,
-    (ci: Institution) => ci.files,
-  )
+  @ManyToOne(() => Institution, (ci: Institution) => ci.files)
   @JoinColumn({ name: "institution_id" })
   institution: Institution;
-
 }

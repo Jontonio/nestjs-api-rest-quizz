@@ -1,5 +1,5 @@
 import { IsNotEmpty, IsNumber, MaxLength } from "class-validator";
-import { ExistIdReport } from "src/decorators/IdReport";
+import { ExistIdReport } from "src/decorators/Report";
 
 export class CreateResultDto {
   @MaxLength(50, {
@@ -12,7 +12,9 @@ export class CreateResultDto {
   @IsNotEmpty({ message: "El valor del resultado es requerido" })
   result_value: number;
 
-  @ExistIdReport()
+  @ExistIdReport({
+    message: "El id del reporte a relacionar no se encuentra registrado",
+  })
   @IsNumber({}, { message: "El id del reporte debe ser númerico" })
   @IsNotEmpty({ message: "El id del reporte a relacionar es requerido" })
   id_report: number;
