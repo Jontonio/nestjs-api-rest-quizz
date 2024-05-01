@@ -42,6 +42,44 @@ export class ExistIdCategoryInstitutionValidator
   }
 }
 
+@ValidatorConstraint({ name: "UniqueCategoryIENameValidator", async: true })
+@Injectable()
+export class UniqueCategoryIENameValidator
+  implements ValidatorConstraintInterface
+{
+  constructor(
+    @InjectRepository(CategoryInstitution)
+    public categoryInstitutionModel: Repository<CategoryInstitution>,
+  ) {}
+
+  async validate(value: string): Promise<boolean> {
+    try {
+      const existNameCategory = await this.categoryInstitutionModel.findOneBy({
+        name_category_institution: value,
+      });
+      return !existNameCategory;
+    } catch (e) {
+      return false;
+    }
+  }
+
+  defaultMessage(): string {
+    return "El nombre de la categoria de insitución ya se encuentra registrado ";
+  }
+}
+
+// Nombre del decorador
+export const UniqueCategoryIEName = (validationOptions?: ValidationOptions) => {
+  return (object: unknown, propertyName: string) => {
+    registerDecorator({
+      target: object.constructor,
+      propertyName: propertyName,
+      options: validationOptions,
+      validator: UniqueCategoryIENameValidator,
+    });
+  };
+};
+
 // Nombre del decorador
 export const ExistIdCategoryInstitution = (
   validationOptions?: ValidationOptions,

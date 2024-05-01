@@ -12,14 +12,19 @@ import { Repository } from "typeorm";
 // Clase del decorador
 @ValidatorConstraint({ name: "IdCodModInstitutionValidator", async: true })
 @Injectable()
-export class IdCodModInstitutionValidator implements ValidatorConstraintInterface {
+export class ExistIdCodModInstitutionValidator
+  implements ValidatorConstraintInterface
+{
   constructor(
-    @InjectRepository(Institution) public institutionModel: Repository<Institution>,
+    @InjectRepository(Institution)
+    public institutionModel: Repository<Institution>,
   ) {}
 
   async validate(cod_mod_institution: string): Promise<boolean> {
     try {
-      const report = await this.institutionModel.findOneBy({ cod_mod_institution });
+      const report = await this.institutionModel.findOneBy({
+        cod_mod_institution,
+      });
       if (report) {
         return true;
       }
@@ -36,13 +41,15 @@ export class IdCodModInstitutionValidator implements ValidatorConstraintInterfac
 }
 
 // Nombre del decorador
-export const ExistCodModInstitution = (validationOptions?: ValidationOptions) => {
+export const ExistCodModInstitution = (
+  validationOptions?: ValidationOptions,
+) => {
   return (object: unknown, propertyName: string) => {
     registerDecorator({
       target: object.constructor,
       propertyName: propertyName,
       options: validationOptions,
-      validator: IdCodModInstitutionValidator,
+      validator: ExistIdCodModInstitutionValidator,
     });
   };
 };
