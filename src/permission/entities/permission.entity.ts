@@ -19,7 +19,7 @@ export class Permission {
   name_permission: string;
 
   @Column({ default: true })
-  status: number;
+  status: boolean;
 
   @CreateDateColumn()
   createdAt: Date;

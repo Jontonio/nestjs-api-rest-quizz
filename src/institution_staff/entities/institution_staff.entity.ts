@@ -26,7 +26,8 @@ export class InstitutionStaff {
   updatedAt: Date;
 
   // Relacionar con la tabla Type_staff
-  @ManyToOne(() => TypeStaff, (ts: TypeStaff) => ts.institutionstaffs, {
+  @ManyToOne(() => TypeStaff,
+   (ts: TypeStaff) => ts.institutionstaffs, {
     nullable: false,
     onUpdate: "CASCADE",
   })
