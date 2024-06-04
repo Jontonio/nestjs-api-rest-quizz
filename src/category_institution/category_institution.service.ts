@@ -1,22 +1,25 @@
-import { Injectable, InternalServerErrorException } from '@nestjs/common';
-import { CreateCategoryInstitutionDto } from './dto/create-category_institution.dto';
-import { UpdateCategoryInstitutionDto } from './dto/update-category_institution.dto';
+import { Injectable, InternalServerErrorException } from "@nestjs/common";
+import { CreateCategoryInstitutionDto } from "./dto/create-category_institution.dto";
+import { UpdateCategoryInstitutionDto } from "./dto/update-category_institution.dto";
 import { InjectRepository } from "@nestjs/typeorm";
 import { CategoryInstitution } from "./entities/category_institution.entity";
 import { Repository } from "typeorm";
-import { PageOptionsDto } from 'src/helpers/PageOptionsDto.dto';
-import { PageMetaDto } from 'src/helpers/PageMetaDto';
+import { PageOptionsDto } from "src/helpers/PageOptionsDto.dto";
+import { PageMetaDto } from "src/helpers/PageMetaDto";
 import { PageDto } from "src/helpers/page.dto";
-import { HttpResponse } from 'src/class/HttpResponse';
+import { HttpResponse } from "src/class/HttpResponse";
 
 @Injectable()
 export class CategoryInstitutionService {
   constructor(
-    @InjectRepository(CategoryInstitution) public categoryInstitutionModel: Repository<CategoryInstitution>,
+    @InjectRepository(CategoryInstitution)
+    public categoryInstitutionModel: Repository<CategoryInstitution>,
   ) {}
   async create(createCategoryInstitutionDto: CreateCategoryInstitutionDto) {
     try {
-      const categoryInstitution = await this.categoryInstitutionModel.save(createCategoryInstitutionDto);
+      const categoryInstitution = await this.categoryInstitutionModel.save(
+        createCategoryInstitutionDto,
+      );
       return new HttpResponse().success(
         201,
         "Categoria de institucion creado correctamente",
@@ -67,7 +70,11 @@ export class CategoryInstitutionService {
         id_category_institution: id,
       });
 
-      return new HttpResponse().success(201, "categoria de institucion", categoryInstitution);
+      return new HttpResponse().success(
+        201,
+        "categoria de institucion",
+        categoryInstitution,
+      );
     } catch (error) {
       throw new InternalServerErrorException(
         "Ocurrio un error al obtener la categoria de institucion",
@@ -75,9 +82,15 @@ export class CategoryInstitutionService {
     }
   }
 
-  async update(id_category_institution: number, data: UpdateCategoryInstitutionDto) {
+  async update(
+    id_category_institution: number,
+    data: UpdateCategoryInstitutionDto,
+  ) {
     try {
-      const categoryInstitution = await this.categoryInstitutionModel.update(id_category_institution, data);
+      const categoryInstitution = await this.categoryInstitutionModel.update(
+        id_category_institution,
+        data,
+      );
 
       return new HttpResponse().success(
         201,
@@ -93,9 +106,12 @@ export class CategoryInstitutionService {
 
   async remove(id_category_institution: number) {
     try {
-      const categoryInstitution = await this.categoryInstitutionModel.update(id_category_institution, {
-        status: false,
-      });
+      const categoryInstitution = await this.categoryInstitutionModel.update(
+        id_category_institution,
+        {
+          status: false,
+        },
+      );
 
       return new HttpResponse().success(
         201,

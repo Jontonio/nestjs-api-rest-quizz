@@ -3,7 +3,6 @@ import {
   HttpStatus,
   Injectable,
   InternalServerErrorException,
-  StreamableFile,
 } from "@nestjs/common";
 import { CreateFileDto } from "./dto/create-file.dto";
 import { UpdateFileDto } from "./dto/update-file.dto";
@@ -18,8 +17,6 @@ import { PageOptionsDto } from "src/helpers/PageOptionsDto.dto";
 import { PageMetaDto } from "src/helpers/PageMetaDto";
 import { PageDto } from "src/helpers/page.dto";
 import * as fs from "fs-extra";
-import { createReadStream } from "fs";
-import { join } from "path";
 
 @Injectable()
 export class FileService {
