@@ -15,7 +15,7 @@ import { File } from "./entities/file.entity";
 import { Repository } from "typeorm";
 import { PageOptionsDto } from "src/helpers/PageOptionsDto.dto";
 import { PageMetaDto } from "src/helpers/PageMetaDto";
-import { PageDto } from "src/helpers/page.dto";
+import { PageDto } from "src/helpers/Page.dto";
 import * as fs from "fs-extra";
 
 @Injectable()
