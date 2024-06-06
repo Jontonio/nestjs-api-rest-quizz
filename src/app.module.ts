@@ -15,6 +15,7 @@ import { RolePermissionModule } from "./role_permission/role_permission.module";
 import { FileModule } from "./file/file.module";
 import { InstitutionStaffModule } from "./institution_staff/institution_staff.module";
 import { InstitutionModule } from "./institution/institution.module";
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -32,6 +33,7 @@ import { InstitutionModule } from "./institution/institution.module";
     CategoryInstitutionModule,
     ResultModule,
     ReportModule,
+    AuthModule,
   ],
   controllers: [AppController],
   providers: [AppService],
