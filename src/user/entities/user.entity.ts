@@ -29,7 +29,7 @@ export class User {
   is_active: number;
 
   @Column({ default: true })
-  status: number;
+  status: boolean;
 
   @CreateDateColumn()
   createdAt: Date;
@@ -40,8 +40,11 @@ export class User {
    // Relacionar con Rol
    @ManyToOne(
     () => Role,
-    (r: Role) => r.users,
+    (r: Role) => r.role_permissions, {
+    nullable: false,
+    onUpdate: "CASCADE",
+    }
   )
-  @JoinColumn({ name: "role_id" })
+  @JoinColumn({ name: "id_role", referencedColumnName: "id_role"  })
   role: Role;
 }

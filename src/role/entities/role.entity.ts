@@ -20,7 +20,7 @@ export class Role {
   name_role: string;
 
   @Column({ default: true })
-  status: number;
+  status: boolean;
 
   @CreateDateColumn()
   createdAt: Date;

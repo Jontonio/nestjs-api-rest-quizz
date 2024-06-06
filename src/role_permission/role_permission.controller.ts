@@ -6,10 +6,12 @@ import {
   Patch,
   Param,
   Delete,
+  Query,
 } from "@nestjs/common";
 import { RolePermissionService } from "./role_permission.service";
 import { CreateRolePermissionDto } from "./dto/create-role_permission.dto";
 import { UpdateRolePermissionDto } from "./dto/update-role_permission.dto";
+import { PageOptionsDto } from "src/helpers/PageOptionsDto.dto";
 
 @Controller("role-permission")
 export class RolePermissionController {
@@ -21,8 +23,8 @@ export class RolePermissionController {
   }
 
   @Get()
-  findAll() {
-    return this.rolePermissionService.findAll();
+  findAll(@Query() pageOptionsDto: PageOptionsDto) {
+    return this.rolePermissionService.findAll(pageOptionsDto);
   }
 
   @Get(":id")

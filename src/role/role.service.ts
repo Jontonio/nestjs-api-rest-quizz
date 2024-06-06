@@ -1,26 +1,105 @@
-import { Injectable } from "@nestjs/common";
+import { Injectable, InternalServerErrorException } from "@nestjs/common";
 import { CreateRoleDto } from "./dto/create-role.dto";
 import { UpdateRoleDto } from "./dto/update-role.dto";
+import { Role } from "./entities/role.entity";
+import { Repository } from "typeorm";
+import { InjectRepository } from "@nestjs/typeorm";
+import { HttpResponse } from "src/class/HttpResponse";
+import { PageOptionsDto } from "src/helpers/PageOptionsDto.dto";
+import { PageMetaDto } from "src/helpers/PageMetaDto";
+import { PageDto } from "src/helpers/page.dto";
 
 @Injectable()
 export class RoleService {
-  create(createRoleDto: CreateRoleDto) {
-    return "This action adds a new role";
+  constructor(
+    @InjectRepository(Role) public roleModel: Repository<Role>,
+  ) {}
+  async create(createRoleDto: CreateRoleDto) {
+    try {
+      const role = await this.roleModel.save(createRoleDto);
+      return new HttpResponse().success(
+        201,
+        "rol creado correctamente",
+        role,
+      );
+    } catch (error) {
+      throw new InternalServerErrorException(
+        "Ocurrio un error al crear el rol",
+      );
+    }
   }
 
-  findAll() {
-    return `This action returns all role`;
+  async findAll(pageOptionsDto: PageOptionsDto) {
+    try {
+      const { skip, order, take } = pageOptionsDto;
+      const role = await this.roleModel.find({
+        where: { status: true },
+        skip: skip,
+        take: take,
+        order: { id_role: order },
+      });
+      const itemCount = await this.roleModel.countBy({
+        status: true,
+      });
+      const pageMetaDto = new PageMetaDto({ itemCount, pageOptionsDto });
+      const data = new PageDto(role, pageMetaDto);
+      return new HttpResponse().success(
+        201,
+        "Lista de roles",
+        data,
+      );
+    } catch (error) {
+      throw new InternalServerErrorException(
+        "Ocurrio un error al obtener los roles",
+      );
+    }
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} role`;
+  async findOne(id: number) {
+    try {
+      const role = await this.roleModel.findBy({
+        id_role: id,
+      });
+
+      return new HttpResponse().success(201, "rol", role);
+    } catch (error) {
+      throw new InternalServerErrorException(
+        "Ocurrio un error al obtener el rol",
+      );
+    }
   }
 
-  update(id: number, updateRoleDto: UpdateRoleDto) {
-    return `This action updates a #${id} role`;
+  async update(id_role: number, data: UpdateRoleDto) {
+    try {
+      const permission = await this.roleModel.update(id_role, data);
+
+      return new HttpResponse().success(
+        201,
+        "rol actualizado correctamente",
+        permission,
+      );
+    } catch (error) {
+      throw new InternalServerErrorException(
+        "Ocurrio un error al actualizar el rol",
+      );
+    }
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} role`;
+  async remove(id_role: number) {
+    try {
+      const role = await this.roleModel.update(id_role, {
+        status: false,
+      });
+
+      return new HttpResponse().success(
+        201,
+        "rol eliminado correctamente",
+        role,
+      );
+    } catch (error) {
+      throw new InternalServerErrorException(
+        "Ocurrio un error al eliminar el rol",
+      );
+    }
   }
 }
