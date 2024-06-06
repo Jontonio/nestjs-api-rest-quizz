@@ -7,20 +7,39 @@ import {
   Param,
   Delete,
   Query,
+  UseInterceptors,
+  UploadedFile,
 } from "@nestjs/common";
 import { FileService } from "./file.service";
 import { CreateFileDto } from "./dto/create-file.dto";
 import { UpdateFileDto } from "./dto/update-file.dto";
 import { QueryFileDto } from "./dto/query-file.dto";
 import { PageOptionsDto } from "src/helpers/PageOptionsDto.dto";
+import { FileInterceptor } from "@nestjs/platform-express";
+import * as multer from "multer";
+import { v4 as uuidv4 } from "uuid";
+import { extname } from "path";
+
+const storage = multer.diskStorage({
+  destination: "./uploads",
+  filename: (req, file, cb) => {
+    const fileExtension = extname(file.originalname);
+    const fileName = `${uuidv4()}${fileExtension}`;
+    cb(null, fileName);
+  },
+});
 
 @Controller("file")
 export class FileController {
   constructor(private readonly fileService: FileService) {}
 
   @Post()
-  create(@Body() createFileDto: CreateFileDto) {
-    return this.fileService.create(createFileDto);
+  @UseInterceptors(FileInterceptor("file", { storage }))
+  create(
+    @Body() createFileDto: CreateFileDto,
+    @UploadedFile() file: Express.Multer.File,
+  ) {
+    return this.fileService.create(createFileDto, file);
   }
 
   @Get()

@@ -1,4 +1,9 @@
-import { Injectable, InternalServerErrorException } from "@nestjs/common";
+import {
+  HttpException,
+  HttpStatus,
+  Injectable,
+  InternalServerErrorException,
+} from "@nestjs/common";
 import { CreateFileDto } from "./dto/create-file.dto";
 import { UpdateFileDto } from "./dto/update-file.dto";
 import { ExcelFile } from "src/class/ExcelFile";
@@ -10,7 +15,8 @@ import { File } from "./entities/file.entity";
 import { Repository } from "typeorm";
 import { PageOptionsDto } from "src/helpers/PageOptionsDto.dto";
 import { PageMetaDto } from "src/helpers/PageMetaDto";
-import { PageDto } from "src/helpers/page.dto";
+import { PageDto } from "src/helpers/Page.dto";
+import * as fs from "fs-extra";
 
 @Injectable()
 export class FileService {
@@ -20,18 +26,49 @@ export class FileService {
     private readonly openaiService: OpenIaService,
   ) {}
 
-  async create(createFileDto: CreateFileDto) {
+  async create(createFileDto: CreateFileDto, _file: Express.Multer.File) {
     try {
-      const file = await this.fileModel.save(createFileDto);
+      if (!_file) {
+        throw new HttpException(
+          `El archivo es requerido`,
+          HttpStatus.BAD_REQUEST,
+        );
+      }
+      const allowedMimes = [
+        "application/vnd.ms-excel", // Para archivos .xls
+        "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+      ];
+
+      if (!allowedMimes.includes(_file.mimetype)) {
+        await fs.unlink(_file.path);
+        throw new HttpException(
+          `Solo se permite archivo de tipo (XLSX)`,
+          HttpStatus.BAD_REQUEST,
+        );
+      }
+
+      const in_mb = _file.size / 1000000;
+
+      if (in_mb > 2) {
+        await fs.unlink(_file.path);
+        throw new HttpException(
+          `Tamaño de archivo permitido mínimo 2 MB`,
+          HttpStatus.BAD_REQUEST,
+        );
+      }
+      const file_extension = _file.originalname.split(".").pop();
+      const file_name = _file.filename;
+      const file_url = _file.mimetype;
+      const newDto = { ...createFileDto, file_extension, file_name, file_url };
+      const file = await this.fileModel.save(newDto);
       return new HttpResponse().success(
         201,
         "Archivo registrado correctamente",
         file,
       );
     } catch (error) {
-      throw new InternalServerErrorException(
-        "Ocurrio un error al registrar archivo",
-      );
+      console.log(error);
+      throw new InternalServerErrorException(error.message);
     }
   }
 
@@ -67,7 +104,8 @@ export class FileService {
   ) {
     try {
       const fileExcel = new ExcelFile();
-      fileExcel.readExcel("../uploads/encuesta.xlsx");
+      //TODO: pasar el nombre del archivo
+      fileExcel.readExcel("/uploads/9499f580-aaaa-48d0-a05c-bed47b42356a.xlsx");
       const { columns } = queryFileDto;
 
       columns.forEach((val) => {
@@ -107,12 +145,10 @@ export class FileService {
 
   async loadFile() {
     try {
+      //TODO: pasar el nombre del archivo
       const ruta = "../uploads/encuesta.xlsx";
-
       const fileExcel = new ExcelFile();
-
       fileExcel.readExcel(ruta);
-
       return new HttpResponse().success(
         200,
         "Archivo cargado correctamente",
