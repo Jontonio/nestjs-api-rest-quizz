@@ -7,7 +7,7 @@ import { Repository } from "typeorm";
 import { HttpResponse } from "src/class/HttpResponse";
 import { PageOptionsDto } from "src/helpers/PageOptionsDto.dto";
 import { PageMetaDto } from "src/helpers/PageMetaDto";
-import { PageDto } from "src/helpers/page.dto";
+import { PageDto } from "src/helpers/Page.dto";
 
 @Injectable()
 export class RolePermissionService {
@@ -51,11 +51,7 @@ export class RolePermissionService {
 
       const data = new PageDto(rolePermission, pageMetaDto);
 
-      return new HttpResponse().success(
-        201,
-        "Lista de role permiso",
-        data,
-      );
+      return new HttpResponse().success(201, "Lista de role permiso", data);
     } catch (error) {
       throw new InternalServerErrorException(
         "Ocurrio un error al obtener lista de rol permiso",
@@ -81,7 +77,10 @@ export class RolePermissionService {
     }
   }
 
-  async update(id_role_permission: number, updateRolePermissionDto: UpdateRolePermissionDto) {
+  async update(
+    id_role_permission: number,
+    updateRolePermissionDto: UpdateRolePermissionDto,
+  ) {
     try {
       const rolePermission = await this.rolePermissionModel.update(
         id_role_permission,
@@ -121,4 +120,3 @@ export class RolePermissionService {
     }
   }
 }
-

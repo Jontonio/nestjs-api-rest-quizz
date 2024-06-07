@@ -7,11 +7,12 @@ import { Repository } from "typeorm";
 import { HttpResponse } from "src/class/HttpResponse";
 import { PageOptionsDto } from "src/helpers/PageOptionsDto.dto";
 import { PageMetaDto } from "src/helpers/PageMetaDto";
-import { PageDto } from "src/helpers/page.dto";
+import { PageDto } from "src/helpers/Page.dto";
 @Injectable()
 export class PermissionService {
   constructor(
-    @InjectRepository(Permission) public permissionModel: Repository<Permission>,
+    @InjectRepository(Permission)
+    public permissionModel: Repository<Permission>,
   ) {}
   async create(createPermissionDto: CreatePermissionDto) {
     try {
@@ -42,11 +43,7 @@ export class PermissionService {
       });
       const pageMetaDto = new PageMetaDto({ itemCount, pageOptionsDto });
       const data = new PageDto(permission, pageMetaDto);
-      return new HttpResponse().success(
-        201,
-        "Lista de permisos",
-        data,
-      );
+      return new HttpResponse().success(201, "Lista de permisos", data);
     } catch (error) {
       throw new InternalServerErrorException(
         "Ocurrio un error al obtener los permisos",
