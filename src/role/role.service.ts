@@ -1,4 +1,4 @@
-import { Injectable, InternalServerErrorException } from "@nestjs/common";
+import { HttpException, Injectable } from "@nestjs/common";
 import { CreateRoleDto } from "./dto/create-role.dto";
 import { UpdateRoleDto } from "./dto/update-role.dto";
 import { Role } from "./entities/role.entity";
@@ -11,21 +11,13 @@ import { PageDto } from "src/helpers/page.dto";
 
 @Injectable()
 export class RoleService {
-  constructor(
-    @InjectRepository(Role) public roleModel: Repository<Role>,
-  ) {}
+  constructor(@InjectRepository(Role) public roleModel: Repository<Role>) {}
   async create(createRoleDto: CreateRoleDto) {
     try {
       const role = await this.roleModel.save(createRoleDto);
-      return new HttpResponse().success(
-        201,
-        "rol creado correctamente",
-        role,
-      );
-    } catch (error) {
-      throw new InternalServerErrorException(
-        "Ocurrio un error al crear el rol",
-      );
+      return new HttpResponse().success(201, "rol creado correctamente", role);
+    } catch (e) {
+      throw new HttpException(e.message, e.status);
     }
   }
 
@@ -43,29 +35,21 @@ export class RoleService {
       });
       const pageMetaDto = new PageMetaDto({ itemCount, pageOptionsDto });
       const data = new PageDto(role, pageMetaDto);
-      return new HttpResponse().success(
-        201,
-        "Lista de roles",
-        data,
-      );
-    } catch (error) {
-      throw new InternalServerErrorException(
-        "Ocurrio un error al obtener los roles",
-      );
+      return new HttpResponse().success(201, "Lista de roles", data);
+    } catch (e) {
+      throw new HttpException(e.message, e.status);
     }
   }
 
-  async findOne(id: number) {
+  async findOne(id_role: number) {
     try {
-      const role = await this.roleModel.findBy({
-        id_role: id,
+      const role = await this.roleModel.findOneBy({
+        id_role,
       });
 
-      return new HttpResponse().success(201, "rol", role);
-    } catch (error) {
-      throw new InternalServerErrorException(
-        "Ocurrio un error al obtener el rol",
-      );
+      return new HttpResponse().success(201, "Obtener rol", role);
+    } catch (e) {
+      throw new HttpException(e.message, e.status);
     }
   }
 
@@ -78,10 +62,8 @@ export class RoleService {
         "rol actualizado correctamente",
         permission,
       );
-    } catch (error) {
-      throw new InternalServerErrorException(
-        "Ocurrio un error al actualizar el rol",
-      );
+    } catch (e) {
+      throw new HttpException(e.message, e.status);
     }
   }
 
@@ -96,10 +78,8 @@ export class RoleService {
         "rol eliminado correctamente",
         role,
       );
-    } catch (error) {
-      throw new InternalServerErrorException(
-        "Ocurrio un error al eliminar el rol",
-      );
+    } catch (e) {
+      throw new HttpException(e.message, e.status);
     }
   }
 }

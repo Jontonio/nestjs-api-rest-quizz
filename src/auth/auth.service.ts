@@ -1,7 +1,6 @@
 import {
   HttpException,
   Injectable,
-  InternalServerErrorException,
   UnauthorizedException,
 } from "@nestjs/common";
 import { CreateAuthDto } from "./dto/create-auth.dto";
@@ -44,11 +43,20 @@ export class AuthService {
       //Generate token
       const payload = {
         email: user.email,
+        id_user: user.id_user,
       };
 
       const token = generateToken(payload);
       // Generate payload user
-      return new HttpResponse().success(200, "Bienvenid@ al sistema", token);
+      const msg = `Bienvenid@ ${user.names} al sistema`;
+      delete user.password;
+
+      const data = {
+        token,
+        user,
+      };
+
+      return new HttpResponse().success(201, msg, data);
     } catch (e) {
       console.log(e);
       throw new HttpException(e.message, e.status);

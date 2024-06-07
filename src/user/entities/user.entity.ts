@@ -19,6 +19,16 @@ export class User {
   @Index({ unique: true })
   email: string;
 
+  @Column({ type: "varchar", length: 10 })
+  @Index({ unique: true })
+  id_card: string;
+
+  @Column({ type: "varchar", length: 45 })
+  names: string;
+
+  @Column({ type: "varchar", length: 50 })
+  full_name: string;
+
   @Column({ type: "varchar" })
   password: string;
 
@@ -37,14 +47,11 @@ export class User {
   @UpdateDateColumn()
   updatedAt: Date;
 
-   // Relacionar con Rol
-   @ManyToOne(
-    () => Role,
-    (r: Role) => r.role_permissions, {
+  // Relacionar con Rol
+  @ManyToOne(() => Role, (r: Role) => r.role_permissions, {
     nullable: false,
     onUpdate: "CASCADE",
-    }
-  )
-  @JoinColumn({ name: "id_role", referencedColumnName: "id_role"  })
+  })
+  @JoinColumn({ name: "id_role", referencedColumnName: "id_role" })
   role: Role;
 }
