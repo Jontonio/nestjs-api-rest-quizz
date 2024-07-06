@@ -18,6 +18,13 @@ async function bootstrap() {
 
   useContainer(app.select(AppModule), { fallbackOnErrors: true });
   app.setGlobalPrefix("api/v1");
+
+  app.enableCors({
+    origin: ["http://localhost:5173"],
+    methods: ["GET", "PUT", "POST", "DELETE", "UPDATE", "OPTIONS"],
+    credentials: true,
+  });
+
   await app.listen(configService.get("SERVER_PORT"));
 }
 

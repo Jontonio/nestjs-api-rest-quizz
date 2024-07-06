@@ -1,9 +1,14 @@
 import { IsNotEmpty, IsString, MaxLength, MinLength } from "class-validator";
 import { CategoryInstitution } from "src/category_institution/entities/category_institution.entity";
 import { ExistIdCategoryInstitution } from "src/decorators/CategoryInstitution";
+import { UniqueCodModInstitution } from "src/decorators/Institution";
 
 export class CreateInstitutionDto {
   // create decorator for verify cod modular duplicate
+  @UniqueCodModInstitution({
+    message:
+      "El codigo modular de la institucion ya se encuentra registrado, registre uno nuevo.",
+  })
   @MinLength(7, {
     message:
       "El código modular de la institución debe tener como mínimo 7 dígitos",

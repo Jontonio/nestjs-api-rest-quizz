@@ -25,10 +25,7 @@ export class ExistIdCodModInstitutionValidator
       const report = await this.institutionModel.findOneBy({
         cod_mod_institution,
       });
-      if (report) {
-        return true;
-      }
-      return false;
+      return report ? true : false;
     } catch (e) {
       console.log(e);
       return false;
@@ -37,6 +34,34 @@ export class ExistIdCodModInstitutionValidator
 
   defaultMessage(): string {
     return "El codigo modular de la institucion a relacionar no se encuentra registrado";
+  }
+}
+
+// Clase del decorador
+@ValidatorConstraint({ name: "IdCodModInstitutionValidator", async: true })
+@Injectable()
+export class UniqueCodModInstitutionValidator
+  implements ValidatorConstraintInterface
+{
+  constructor(
+    @InjectRepository(Institution)
+    public institutionModel: Repository<Institution>,
+  ) {}
+
+  async validate(cod_mod_institution: string): Promise<boolean> {
+    try {
+      const report = await this.institutionModel.findOneBy({
+        cod_mod_institution,
+      });
+      return !report;
+    } catch (e) {
+      console.log(e);
+      return false;
+    }
+  }
+
+  defaultMessage(): string {
+    return "El codigo modular de la institucion ya se encuentra registrado, registre uno nuevo.";
   }
 }
 
@@ -50,6 +75,20 @@ export const ExistCodModInstitution = (
       propertyName: propertyName,
       options: validationOptions,
       validator: ExistIdCodModInstitutionValidator,
+    });
+  };
+};
+
+// Nombre del decorador
+export const UniqueCodModInstitution = (
+  validationOptions?: ValidationOptions,
+) => {
+  return (object: unknown, propertyName: string) => {
+    registerDecorator({
+      target: object.constructor,
+      propertyName: propertyName,
+      options: validationOptions,
+      validator: UniqueCodModInstitutionValidator,
     });
   };
 };

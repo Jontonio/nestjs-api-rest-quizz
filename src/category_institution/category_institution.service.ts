@@ -1,4 +1,4 @@
-import { Injectable, InternalServerErrorException } from "@nestjs/common";
+import { HttpException, Injectable } from "@nestjs/common";
 import { CreateCategoryInstitutionDto } from "./dto/create-category_institution.dto";
 import { UpdateCategoryInstitutionDto } from "./dto/update-category_institution.dto";
 import { InjectRepository } from "@nestjs/typeorm";
@@ -25,10 +25,8 @@ export class CategoryInstitutionService {
         "Categoria de institucion creado correctamente",
         categoryInstitution,
       );
-    } catch (error) {
-      throw new InternalServerErrorException(
-        "Ocurrio un error al crear la categoria de institucion",
-      );
+    } catch (e) {
+      throw new HttpException(e.message, e.status);
     }
   }
 
@@ -57,10 +55,8 @@ export class CategoryInstitutionService {
         "Lista de categorias de institucion",
         data,
       );
-    } catch (error) {
-      throw new InternalServerErrorException(
-        "Ocurrio un error al obtener las categorias de institucion",
-      );
+    } catch (e) {
+      throw new HttpException(e.message, e.status);
     }
   }
 
@@ -75,10 +71,8 @@ export class CategoryInstitutionService {
         "categoria de institucion",
         categoryInstitution,
       );
-    } catch (error) {
-      throw new InternalServerErrorException(
-        "Ocurrio un error al obtener la categoria de institucion",
-      );
+    } catch (e) {
+      throw new HttpException(e.message, e.status);
     }
   }
 
@@ -97,10 +91,8 @@ export class CategoryInstitutionService {
         "Categoria de institucion actualizado correctamente",
         categoryInstitution,
       );
-    } catch (error) {
-      throw new InternalServerErrorException(
-        "Ocurrio un error al actualizar la categoria de institucion",
-      );
+    } catch (e) {
+      throw new HttpException(e.message, e.status);
     }
   }
 
@@ -118,10 +110,8 @@ export class CategoryInstitutionService {
         "Categoria de la institucion eliminado correctamente",
         categoryInstitution,
       );
-    } catch (error) {
-      throw new InternalServerErrorException(
-        "Ocurrio un error al eliminar la categoria de la institucion",
-      );
+    } catch (e) {
+      throw new HttpException(e.message, e.status);
     }
   }
 }
