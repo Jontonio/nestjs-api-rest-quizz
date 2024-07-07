@@ -1,4 +1,9 @@
-import { Injectable, InternalServerErrorException } from "@nestjs/common";
+import {
+  HttpException,
+  Injectable,
+  InternalServerErrorException,
+  NotFoundException,
+} from "@nestjs/common";
 import { CreateInstitutionDto } from "./dto/create-institution.dto";
 import { UpdateInstitutionDto } from "./dto/update-institution.dto";
 import { InjectRepository } from "@nestjs/typeorm";
@@ -8,6 +13,7 @@ import { HttpResponse } from "src/class/HttpResponse";
 import { PageOptionsDto } from "src/helpers/PageOptionsDto.dto";
 import { PageMetaDto } from "src/helpers/PageMetaDto";
 import { PageDto } from "src/helpers/Page.dto";
+import { institutionData } from "src/resources/dataInstituciones";
 
 @Injectable()
 export class InstitutionService {
@@ -75,6 +81,28 @@ export class InstitutionService {
       throw new InternalServerErrorException(
         "Ocurrio un error al obtener institución",
       );
+    }
+  }
+
+  async findOneJSON(modular_code: string) {
+    try {
+      const institution = institutionData.filter((institution: any) =>
+        institution.modular_code.startsWith(modular_code),
+      );
+
+      if (institution.length == 0) {
+        throw new NotFoundException(
+          `No se encontró resultados con código modular ${modular_code}`,
+        );
+      }
+
+      return new HttpResponse().success(
+        200,
+        "Obtención de una institución",
+        institution,
+      );
+    } catch (e) {
+      throw new HttpException(e.message, e.status);
     }
   }
 

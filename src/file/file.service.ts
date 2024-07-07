@@ -99,13 +99,17 @@ export class FileService {
   }
 
   async generateStatisticsInformation(
+    id_file: number,
     queryFileDto: QueryFileDto,
     interpreted: string,
   ) {
     try {
+      const file = await this.fileModel.findOne({
+        where: { id_file },
+      });
       const fileExcel = new ExcelFile();
-      //TODO: pasar el nombre del archivo
-      fileExcel.readExcel("/uploads/9499f580-aaaa-48d0-a05c-bed47b42356a.xlsx");
+      const ruta = `../uploads/${file.file_name}`;
+      fileExcel.readExcel(ruta);
       const { columns } = queryFileDto;
 
       columns.forEach((val) => {
@@ -143,16 +147,18 @@ export class FileService {
     }
   }
 
-  async loadFile() {
+  async loadFile(id_file: number) {
     try {
-      //TODO: pasar el nombre del archivo
-      const ruta = "../uploads/encuesta.xlsx";
+      const file = await this.fileModel.findOne({
+        where: { id_file },
+      });
+      const ruta = `../uploads/${file.file_name}`;
       const fileExcel = new ExcelFile();
       fileExcel.readExcel(ruta);
       return new HttpResponse().success(
         200,
         "Archivo cargado correctamente",
-        fileExcel.getAllDataFile(),
+        fileExcel.getKeys(),
       );
     } catch (error) {
       return new InternalServerErrorException(error.message);

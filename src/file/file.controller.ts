@@ -47,20 +47,22 @@ export class FileController {
     return this.fileService.findAll(pageOptionsDto);
   }
 
-  @Get("/generate-statistics-information")
+  @Get("/generate-statistics-information/:id")
   testResponseFile(
+    @Param("id") id: string,
     @Query("interpreted") interpreted: string,
     @Body() queryFileDto: QueryFileDto,
   ) {
     return this.fileService.generateStatisticsInformation(
+      +id,
       queryFileDto,
       interpreted,
     );
   }
 
-  @Get("/load-file")
-  loadFile() {
-    return this.fileService.loadFile();
+  @Get("/load-file/:id")
+  loadFile(@Param("id") id: string) {
+    return this.fileService.loadFile(+id);
   }
 
   @Get(":id")

@@ -32,6 +32,11 @@ export class InstitutionController {
     return this.institutionService.findOne(id);
   }
 
+  @Get("get-one-ie-json/:modular_code")
+  findOneJSON(@Param("modular_code") modular_code: string) {
+    return this.institutionService.findOneJSON(modular_code);
+  }
+
   @Patch(":id")
   update(
     @Param("id") id: string,
