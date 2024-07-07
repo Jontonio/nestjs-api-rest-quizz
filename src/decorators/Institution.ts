@@ -50,10 +50,10 @@ export class UniqueCodModInstitutionValidator
 
   async validate(cod_mod_institution: string): Promise<boolean> {
     try {
-      const report = await this.institutionModel.findOneBy({
+      const institution = await this.institutionModel.findOneBy({
         cod_mod_institution,
       });
-      return !report;
+      return !institution;
     } catch (e) {
       console.log(e);
       return false;

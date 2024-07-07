@@ -8,11 +8,16 @@ import { CategoryInstitution } from "src/category_institution/entities/category_
 import { MiddlewareBuilder } from "@nestjs/core";
 import { ExistInstitution } from "src/middlewares/exist-institution.middleware";
 import { DuplicateInstitution } from "src/middlewares/duplicate-institution.middleware";
+import { UniqueCodModInstitutionValidator } from "src/decorators/Institution";
 
 @Module({
   imports: [TypeOrmModule.forFeature([Institution, CategoryInstitution])],
   controllers: [InstitutionController],
-  providers: [InstitutionService, ExistIdCategoryInstitutionValidator],
+  providers: [
+    InstitutionService,
+    ExistIdCategoryInstitutionValidator,
+    UniqueCodModInstitutionValidator,
+  ],
 })
 export class InstitutionModule {
   configure(consumer: MiddlewareBuilder) {
