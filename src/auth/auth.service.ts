@@ -62,4 +62,28 @@ export class AuthService {
       throw new HttpException(e.message, e.status);
     }
   }
+
+  async logout() {
+    try {
+      return new HttpResponse().success(
+        201,
+        "Sesión cerrado correctamente",
+        null,
+      );
+    } catch (e) {
+      console.log(e);
+      throw new HttpException(e.message, e.status);
+    }
+  }
+
+  async checkSession() {
+    try {
+      return new HttpResponse().success(201, "Usuario verificado", {
+        test: "hi",
+      });
+    } catch (e) {
+      console.log(e);
+      throw new HttpException(e.message, e.status);
+    }
+  }
 }

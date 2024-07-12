@@ -13,7 +13,7 @@ import {
 import { FileService } from "./file.service";
 import { CreateFileDto } from "./dto/create-file.dto";
 import { UpdateFileDto } from "./dto/update-file.dto";
-import { QueryFileDto } from "./dto/query-file.dto";
+import { QueryFileDto, QueryGradeSectionFileDto } from "./dto/query-file.dto";
 import { PageOptionsDto } from "src/helpers/PageOptionsDto.dto";
 import { FileInterceptor } from "@nestjs/platform-express";
 import * as multer from "multer";
@@ -63,6 +63,27 @@ export class FileController {
   @Get("/load-file/:id")
   loadFile(@Param("id") id: string) {
     return this.fileService.loadFile(+id);
+  }
+
+  @Get("/get-resume-grade-section/:id")
+  resumeSecctionGrade(@Param("id") id: string) {
+    return this.fileService.resumeSecctionGrade(+id);
+  }
+
+  @Get("/generate-statics-grade-section/:id")
+  generateStaticsWithGradeSection(
+    @Param("id") id: string,
+    @Body() queryGradeSectionFile: QueryGradeSectionFileDto,
+  ) {
+    return this.fileService.generateStaticsWithGradeSection(
+      +id,
+      queryGradeSectionFile,
+    );
+  }
+
+  @Get("/get-files-from-ie/:cod_mod_institution")
+  getFilesFromIE(@Param("cod_mod_institution") cod_mod_institution: string) {
+    return this.fileService.getFilesFromIE(cod_mod_institution);
   }
 
   @Get(":id")

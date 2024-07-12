@@ -63,19 +63,19 @@ class ExcelFile {
         const modifiedRow: any = {};
         for (const key in row) {
           if (row.hasOwnProperty(key)) {
-            const modifiedKey = key.trim().toLowerCase().replace("  ", " ");
+            const modifiedKey = key.trim().toLowerCase().replace(/\s+/g, " ");
             modifiedRow[modifiedKey] = row[key]
               .toString()
               .trim()
               .toLowerCase()
-              .replace("  ", " ");
+              .replace(/\s+/g, " ");
           }
         }
         return modifiedRow;
       });
 
       const keys = Object.keys(jsonData[0]).map((key) =>
-        key.trim().toLowerCase(),
+        key.replace(/\s+/g, " ").trim().toLowerCase(),
       );
 
       // set values
@@ -94,16 +94,26 @@ class ExcelFile {
     return { rows: this.rows, keys: this.keys, sizeRows: this.sizeRows };
   }
 
+  getColumn(column: any) {
+    const uniqueValues: string[] = [];
+    const resultados = {};
+
+    this.rows.forEach((objeto) => {
+      const clave = [column].map((columna) => objeto[columna]).join("_._");
+      resultados[clave] ? resultados[clave]++ : (resultados[clave] = 1);
+    });
+
+    Object.keys(resultados).forEach((val) => uniqueValues.push(val));
+
+    return { resut: uniqueValues, length: uniqueValues.length };
+  }
+
   groupBy(columns: string[]) {
     const resultados = {};
 
     this.rows.forEach((objeto) => {
       const clave = columns.map((columna) => objeto[columna]).join("_._");
-      if (resultados[clave]) {
-        resultados[clave]++;
-      } else {
-        resultados[clave] = 1;
-      }
+      resultados[clave] ? resultados[clave]++ : (resultados[clave] = 1);
     });
     // Realiza el formato de datos {name, value}
     const resultado = Object.keys(resultados).map((clave) => {
@@ -122,7 +132,13 @@ class ExcelFile {
         percentage: (resultados[clave] / this.getSizeRows()) * 100,
       };
     });
-    return { resut: resultado, columns, description: "" };
+    return { result: resultado, columns, description: "" };
+  }
+
+  filterGroupByGradeAndSection(grade: string, section: string) {
+    this.rows = this.rows.filter(
+      (objeto) => objeto["grado"] == grade && objeto["sección"] == section,
+    );
   }
 }
 

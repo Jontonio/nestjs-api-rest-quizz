@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   HttpException,
   HttpStatus,
   Injectable,
@@ -9,7 +10,7 @@ import { UpdateFileDto } from "./dto/update-file.dto";
 import { ExcelFile } from "src/class/ExcelFile";
 import { OpenIaService } from "src/open-ia/open-ia.service";
 import { HttpResponse } from "src/class/HttpResponse";
-import { QueryFileDto } from "./dto/query-file.dto";
+import { QueryFileDto, QueryGradeSectionFileDto } from "./dto/query-file.dto";
 import { InjectRepository } from "@nestjs/typeorm";
 import { File } from "./entities/file.entity";
 import { Repository } from "typeorm";
@@ -107,9 +108,11 @@ export class FileService {
       const file = await this.fileModel.findOne({
         where: { id_file },
       });
+
       const fileExcel = new ExcelFile();
       const ruta = `../uploads/${file.file_name}`;
       fileExcel.readExcel(ruta);
+
       const { columns } = queryFileDto;
 
       columns.forEach((val) => {
@@ -178,6 +181,76 @@ export class FileService {
     }
   }
 
+  async resumeSecctionGrade(id_file: number) {
+    try {
+      const file = await this.fileModel.findOne({
+        where: { id_file, status: true },
+      });
+
+      const fileExcel = new ExcelFile();
+      const ruta = `../uploads/${file.file_name}`;
+      fileExcel.readExcel(ruta);
+      const grades = fileExcel.groupBy(["grado"]);
+      const sections = fileExcel.groupBy(["sección"]);
+
+      const data = { grades, sections };
+
+      return new HttpResponse().success(200, "Obtención del archivo", data);
+    } catch (error) {
+      throw new InternalServerErrorException(
+        "Ocurrio un error al obtener archivo",
+      );
+    }
+  }
+
+  async generateStaticsWithGradeSection(
+    id_file: number,
+    queryGradeSectionFile: QueryGradeSectionFileDto,
+  ) {
+    try {
+      const file = await this.fileModel.findOne({
+        where: { id_file, status: true },
+      });
+
+      const fileExcel = new ExcelFile();
+      const ruta = `../uploads/${file.file_name}`;
+      fileExcel.readExcel(ruta);
+
+      const { columns, grade, section } = queryGradeSectionFile;
+
+      if (!fileExcel.getColumn("grado").resut.includes(String(grade))) {
+        throw new BadRequestException(
+          "El grado a considerar no se encuentra en el archivo",
+        );
+      }
+
+      if (
+        !fileExcel
+          .getColumn("sección")
+          .resut.includes(String(section).toLowerCase())
+      ) {
+        throw new BadRequestException(
+          "La sección a considerar no se encuentra en el archivo",
+        );
+      }
+
+      columns.forEach((val) => {
+        if (!fileExcel.getKeys().includes(val)) {
+          throw new BadRequestException(
+            "Las columnas ingresadas no se encuentran en el archivo",
+          );
+        }
+      });
+
+      fileExcel.filterGroupByGradeAndSection(String(grade), section);
+      const data = fileExcel.groupBy(columns);
+
+      return new HttpResponse().success(200, "Obtención del archivo", data);
+    } catch (e) {
+      throw new HttpException(e.message, e.status);
+    }
+  }
+
   async update(id_file: number, updateFileDto: UpdateFileDto) {
     try {
       const file = await this.fileModel.update(id_file, updateFileDto);
@@ -205,10 +278,56 @@ export class FileService {
         "Archivo eliminado correctamente",
         institution,
       );
-    } catch (error) {
-      throw new InternalServerErrorException(
-        "Ocurrio un error al eliminar archivo",
-      );
+    } catch (e) {
+      throw new HttpException(e.message, e.status);
+    }
+  }
+
+  async getFilesFromIE(cod_mod_institution: string) {
+    try {
+      const files = await this.fileModel.find({
+        where: {
+          institution: { cod_mod_institution },
+          status: true,
+        },
+        select: ["id_file", "createdAt"],
+        order: {
+          id_file: "ASC",
+        },
+      });
+
+      const acc = {};
+
+      files.map((file) => {
+        const year = new Date(file.createdAt).getFullYear();
+        if (!acc[year]) {
+          acc[year] = [];
+        }
+        acc[year].push(file);
+        return acc;
+      });
+
+      const yearFiles = [];
+
+      Object.keys(acc).forEach((val) => {
+        if (acc[val].length != 0) {
+          acc[val].forEach((element, index) => {
+            const data = {
+              year: `${val}-${index + 1}`,
+              id_file: element.id_file,
+            };
+            yearFiles.push(data);
+          });
+        }
+      });
+      return {
+        statusCode: 201,
+        message: "Lista de archivos de la institución",
+        error: false,
+        data: yearFiles,
+      };
+    } catch (e) {
+      throw new HttpException(e.message, e.status);
     }
   }
 }
