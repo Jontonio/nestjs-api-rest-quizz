@@ -118,18 +118,21 @@ class ExcelFile {
     // Realiza el formato de datos {name, value}
     const resultado = Object.keys(resultados).map((clave) => {
       const splitName = clave.includes("_._") ? clave.split("_._") : clave;
-      let newName: string | string[];
+      let newName: string[];
 
       if (Array.isArray(splitName)) {
         newName = splitName.map((val) => (val ? val : "Sin respuesta"));
       } else {
-        newName = splitName ? splitName : "Sin respuesta";
+        newName = splitName ? [splitName] : ["Sin respuesta"];
       }
 
       return {
+        columns,
         name: newName,
         value: resultados[clave],
-        percentage: (resultados[clave] / this.getSizeRows()) * 100,
+        percentage: Math.round(
+          Number((resultados[clave] / this.getSizeRows()) * 100),
+        ),
       };
     });
     return { result: resultado, columns, description: "" };

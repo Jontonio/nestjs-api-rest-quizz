@@ -243,7 +243,12 @@ export class FileService {
       });
 
       fileExcel.filterGroupByGradeAndSection(String(grade), section);
-      const data = fileExcel.groupBy(columns);
+      const data = [];
+
+      for (let index = 0; index < columns.length; index++) {
+        const item = fileExcel.groupBy([columns[index]]);
+        data.push(item);
+      }
 
       return new HttpResponse().success(200, "Obtención del archivo", data);
     } catch (e) {

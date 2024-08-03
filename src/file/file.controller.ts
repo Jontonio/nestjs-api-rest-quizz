@@ -70,7 +70,7 @@ export class FileController {
     return this.fileService.resumeSecctionGrade(+id);
   }
 
-  @Get("/generate-statics-grade-section/:id")
+  @Post("/generate-statics-grade-section/:id")
   generateStaticsWithGradeSection(
     @Param("id") id: string,
     @Body() queryGradeSectionFile: QueryGradeSectionFileDto,
