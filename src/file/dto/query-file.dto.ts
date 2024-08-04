@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsNumber, Max, Min } from "class-validator";
+import { IsNotEmpty, IsNumber, IsString, Max, Min } from "class-validator";
 
 export class QueryFileDto {
   @IsNotEmpty({ message: "El campo (columns[]) es requerido" })
@@ -17,4 +17,8 @@ export class QueryGradeSectionFileDto {
 
   @IsNotEmpty({ message: "El campo (columns[]) es requerido" })
   columns: string[];
+
+  @IsNotEmpty({ message: "La interpretación es requerida" })
+  @IsString({ message: "La interpretación debe ser String" })
+  interpreted: string;
 }

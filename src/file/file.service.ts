@@ -216,7 +216,7 @@ export class FileService {
       const ruta = `../uploads/${file.file_name}`;
       fileExcel.readExcel(ruta);
 
-      const { columns, grade, section } = queryGradeSectionFile;
+      const { columns, grade, section, interpreted } = queryGradeSectionFile;
 
       if (!fileExcel.getColumn("grado").resut.includes(String(grade))) {
         throw new BadRequestException(
@@ -243,14 +243,34 @@ export class FileService {
       });
 
       fileExcel.filterGroupByGradeAndSection(String(grade), section);
+
       const data = [];
 
-      for (let index = 0; index < columns.length; index++) {
-        const item = fileExcel.groupBy([columns[index]]);
-        data.push(item);
+      if (interpreted == "yes") {
+        try {
+          for (let index = 0; index < columns.length; index++) {
+            const item = fileExcel.groupBy([columns[index]]);
+            const { content } = await this.openaiService.interpretarDatos(
+              JSON.stringify(item),
+            );
+            item.description = content;
+            data.push(item);
+          }
+          return new HttpResponse().success(
+            200,
+            "Resultados de agrupación de datos e interpretacion con IA",
+            data,
+          );
+        } catch (error) {
+          throw new Error("Error a interpretar datos con IA");
+        }
+      } else {
+        for (let index = 0; index < columns.length; index++) {
+          const item = fileExcel.groupBy([columns[index]]);
+          data.push(item);
+        }
+        return new HttpResponse().success(200, "Obtención del archivo", data);
       }
-
-      return new HttpResponse().success(200, "Obtención del archivo", data);
     } catch (e) {
       throw new HttpException(e.message, e.status);
     }

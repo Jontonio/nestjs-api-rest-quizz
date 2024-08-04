@@ -142,6 +142,7 @@ class ExcelFile {
     this.rows = this.rows.filter(
       (objeto) => objeto["grado"] == grade && objeto["sección"] == section,
     );
+    this.setSizeRows(this.rows.length);
   }
 }
 
